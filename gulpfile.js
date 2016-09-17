@@ -1,8 +1,6 @@
 'use strict';
 
 const gulp = require('gulp'),
-    debug = require('gulp-debug'),
-    inject = require('gulp-inject'),
     tsc = require('gulp-typescript'),
     tslint = require('gulp-tslint'),
     sourcemaps = require('gulp-sourcemaps'),
@@ -12,21 +10,6 @@ const gulp = require('gulp'),
 const rimrafSync = require('rimraf').sync;
 
 const config = new Config();
-
-/**
- * Generates the app.d.ts references file dynamically from all application *.ts files.
- */
-gulp.task('gen-ts-refs', function () {
-    var target = gulp.src(config.appTypeScriptReferences);
-    var sources = gulp.src([ config.appTypeScript], {read: false});
-    return target.pipe(inject(sources, {
-        starttag: '//{',
-        endtag: '//}',
-        transform: function (filepath) {
-            return '/// <reference path="..' + filepath + '" />';
-        }
-    })).pipe(gulp.dest(config.typings));
-});
 
 /**
  * Lint all custom TypeScript files.

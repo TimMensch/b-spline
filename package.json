@@ -5,6 +5,7 @@
   "author": "thibauts",
   "license": "MIT",
   "main": "dist/bspline.js",
+  "typings": "./typings/bspline.d.ts",
   "scripts": {
     "build": "gulp",
     "test": "gulp && node ./dist/test/testbspline.js"
@@ -23,8 +24,6 @@
   ],
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-debug": "^2.1.2",
-    "gulp-inject": "^4.1.0",
     "gulp-tslint": "^6.1.1",
     "gulp-typescript": "^2.13.6",
     "rimraf": "^2.5.4",
