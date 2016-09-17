@@ -13,7 +13,7 @@ Install
 -------
 
 ```bash
-$ npm install b-spline
+$ npm install TimMensch/b-spline
 ```
 
 Examples
@@ -22,7 +22,7 @@ Examples
 #### Unclamped knot vector
 
 ```javascript
-var bspline = require('b-spline');
+var BSpline = require('b-spline');
 
 var points = [
   [-1.0,  0.0],
@@ -33,20 +33,22 @@ var points = [
 
 var degree = 2;
 
-// As we don't provide a knot vector, one will be generated 
+// As we don't provide a knot vector, one will be generated
 // internally and have the following form :
 //
 // var knots = [0, 1, 2, 3, 4, 5, 6];
 //
 // Knot vectors must have `number of points + degree + 1` knots.
-// Here we have 4 points and the degree is 2, so the knot vector 
+// Here we have 4 points and the degree is 2, so the knot vector
 // length will be 7.
 //
 // This knot vector is called "uniform" as the knots are all spaced uniformly,
 // ie. the knot spans are all equal (here 1).
 
+var bspline = new BSpline(degree,points);
+
 for(var t=0; t<1; t+=0.01) {
-  var point = bspline(t, degree, points);
+  var point = bspline.getPoint(t);
 }
 ```
 
@@ -56,7 +58,7 @@ for(var t=0; t<1; t+=0.01) {
 #### Clamped knot vector
 
 ```javascript
-var bspline = require('b-spline');
+var BSpline = require('b-spline');
 
 var points = [
   [-1.0,  0.0],
@@ -67,18 +69,19 @@ var points = [
 
 var degree = 2;
 
-// B-splines with clamped knot vectors pass through 
+// B-splines with clamped knot vectors pass through
 // the two end control points.
 //
-// A clamped knot vector must have `degree + 1` equal knots 
+// A clamped knot vector must have `degree + 1` equal knots
 // at both its beginning and end.
 
 var knots = [
   0, 0, 0, 1, 2, 2, 2
 ];
 
+var bspline = new BSpline(degree, points, knots);
 for(var t=0; t<1; t+=0.01) {
-  var point = bspline(t, degree, points, knots);
+  var point = bspline.getPoint(t);
 }
 ```
 
@@ -88,9 +91,9 @@ for(var t=0; t<1; t+=0.01) {
 #### Closed curves
 
 ```javascript
-var bspline = require('b-spline');
+var BSpline = require('b-spline');
 
-// Closed curves are built by repeating the `degree + 1` first 
+// Closed curves are built by repeating the `degree + 1` first
 // control points at the end of the curve
 
 var points = [
@@ -112,8 +115,9 @@ var knots = [
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 ];
 
+var bspline = new BSpline(degree, points, knots);
 for(var t=0; t<1; t+=0.01) {
-  var point = bspline(t, degree, points, knots);
+  var point = bspline.getPoint(t);
 }
 ```
 
@@ -123,7 +127,7 @@ for(var t=0; t<1; t+=0.01) {
 #### Non-uniform rational
 
 ```javascript
-var bspline = require('b-spline');
+var BSpline = require('b-spline');
 
 var points = [
   [ 0.0, -0.5],
@@ -140,7 +144,7 @@ var points = [
   [ 0.0, -0.5]  // P0
 ]
 
-// Here the curve is called non-uniform as the knots 
+// Here the curve is called non-uniform as the knots
 // are not equally spaced
 
 var knots = [
@@ -157,8 +161,9 @@ var weights = [
 
 var degree = 2;
 
+var bspline = new BSpline(degree, points, knots, weights);
 for(var t=0; t<1; t+=0.01) {
-  var point = bspline(t, degree, points, knots, weights);
+  var point = bspline.getPoint(t);
 }
 ```
 
@@ -168,10 +173,15 @@ for(var t=0; t<1; t+=0.01) {
 Usage
 -----
 
-### `bspline(t, degree, points[, knots, weights])`
+### `var bspline = new BSpline(degree, points[, knots, weights])`
 
-* `t` position along the curve in the [0, 1] range
+Define a curve.
+
 * `degree` degree of the curve. Must be less than or equal to the number of control points minus 1. 1 is linear, 2 is quadratic, 3 is cubic, and so on.
 * `points` control points that will be interpolated. Can be vectors of any dimensionality (`[x, y]`, `[x, y, z]`, ...)
 * `knots` optional knot vector. Allow to modulate the control points interpolation spans on `t`. Must be a non-decreasing sequence of `number of points + degree + 1` length values.
 * `weights` optional control points weights. Must be the same length as the control point array.
+
+### `bspline.getPoint(t)`
+
+* `t` position along the curve in the [0, 1] range
