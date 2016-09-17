@@ -4,7 +4,7 @@
   "description": "B-spline interpolation",
   "author": "thibauts",
   "license": "MIT",
-  "main": "index.js",
+  "main": "dist/bspline.js",
   "scripts": {
     "build": "gulp",
     "test": "gulp && node ./dist/test/testbspline.js"
